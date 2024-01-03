@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import CenterCardLayout from '../components/CenterCardLayout'
 
 const Home = (props) => {
 
-  return <h2>Home</h2>;
+  return <CenterCardLayout/>
 };
 
 export default Home;

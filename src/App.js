@@ -20,39 +20,37 @@ function App() {
     }
   }, []);
   return (
-    <>
-      <BrowserRouter>
-        <Context.Provider value={[userProfile, setUserProfile]}>
-          <PageNavbar setProfile={setUserProfile} />
-          <Route
-            path="/"
-            exact
-            component={() => (
-              <Home
-                /* profile={userProfile}
+    <BrowserRouter>
+      <Context.Provider value={[userProfile, setUserProfile]}>
+        <PageNavbar setProfile={setUserProfile} />
+        <Route
+          path="/"
+          exact
+          component={() => (
+            <Home
+            /* profile={userProfile}
                 isLoaded={isLoaded}
                 setPageLoad={setIsLoaded} */
-              />
-            )}
-          />
-          <Route
-            path="/profile"
-            component={() => (
-              <Profile
-                username={userProfile?.username}
-                setName={setUserProfile}
-                profile={userProfile}
-              />
-            )}
-          />
-          <Route
-            path="/login"
-            component={() => <Login setName={setUserProfile} login={true} />}
-          />
-          <Route path="/register" component={Register} />
-        </Context.Provider>
-      </BrowserRouter>
-    </>
+            />
+          )}
+        />
+        <Route
+          path="/profile"
+          component={() => (
+            <Profile
+              username={userProfile?.username}
+              setName={setUserProfile}
+              profile={userProfile}
+            />
+          )}
+        />
+        <Route
+          path="/login"
+          component={() => <Login setName={setUserProfile} login={true} />}
+        />
+        <Route path="/register" component={Register} />
+      </Context.Provider>
+    </BrowserRouter>
   );
 }
 
