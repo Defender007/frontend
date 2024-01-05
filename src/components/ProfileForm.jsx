@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Context } from "../App";
+import ApiRoute from "../ApiSettings";
 
 function ProfileForm(props) {
   const [userProfile, setUserProfile] = useContext(Context);
@@ -14,36 +15,48 @@ function ProfileForm(props) {
   const [switchStatus, setSwitchStatus] = useState("on");
   const [disabledAll, setDisableAll] = useState(true);
 
+  // useEffect(()=>{
+  //   const profile = JSON.parse(localStorage.getItem("profile"));
+  //   if (profile) {
+  //     setUserProfile(profile);
+  //   }
+  // },[userProfile, setUserProfile])
+
   useEffect(() => {
     console.log("State Context in Profile Form:", userProfile);
-    setFirstName(userProfile?.first_name);
-    setLastName(userProfile?.last_name);
-    setDeptartment(userProfile?.department);
-    setMealCategory(userProfile?.meal_category);
-  }, []);
+
+    if (userProfile?.user) {
+      setFirstName(userProfile?.user.first_name);
+      setLastName(userProfile?.user.last_name);
+      setDeptartment(userProfile?.department);
+      setMealCategory(userProfile?.meal_category);
+    } else if (userProfile?.username) {
+      setFirstName(userProfile?.first_name);
+      setLastName(userProfile?.last_name);
+    }
+  }, [userProfile]);
 
   //...handles Switch Events
   const updateSwitch = (e) => {
-    // e.preventDefault();
-    // if(switchStatus)
     const val = e.target.value;
     console.table("Value:", val);
+    console.log("Profile Value when SWITCH:", userProfile)
     setDisableAll(!disabledAll);
   };
 
   //...handles Form submission Events
   const submit = async (e) => {
     e.preventDefault();
-
-    const PROFILE_URL = "http://localhost:8000/api/profile";
-
+    // const PROFILE_URL = "http://localhost:8000/api/profile";
+    const PROFILE_URL = ApiRoute.PROFILE_PATH;
     const payLoad = {
       first_name,
       last_name,
       department,
       meal_category,
     };
-    const REQUEST_METHOD = userProfile?.id ? "PATCH" : "POST"
+    console.log("TRACKING PROFILE OBJECT in Profile Form:", userProfile);
+    const REQUEST_METHOD = userProfile?.user ? "PATCH" : "POST";
     const response = await fetch(PROFILE_URL, {
       method: REQUEST_METHOD,
       headers: { "Content-Type": "application/json" },
@@ -51,10 +64,11 @@ function ProfileForm(props) {
       body: JSON.stringify(payLoad),
     });
     const content = await response.json();
-    if (content.id) {
-      localStorage.setItem('profile', JSON.stringify(content))
+    if (content?.id) {
+      localStorage.setItem("profile", JSON.stringify(content));
       console.log("Content:", content);
       setDisableAll(!disabledAll);
+      setUserProfile(content);
     }
   };
 
@@ -67,7 +81,7 @@ function ProfileForm(props) {
             type="text"
             value={first_name}
             placeholder="First Name"
-            disabled={disabledAll ? true : false}
+            disabled={!!disabledAll}
             onChange={(e) => setFirstName(e.target.value)}
           />
         </Form.Group>
@@ -99,9 +113,9 @@ function ProfileForm(props) {
         <Form.Group as={Col} controlId="formGridMealCategory">
           <Form.Label>Meal Category</Form.Label>
           <Form.Select
-            defaultValue={meal_category ? meal_category : "Choose..."}
+            defaultValue={meal_category || "Choose..."}
             value={meal_category}
-            disabled={disabledAll ? true : false}
+            disabled={!!disabledAll}
             onChange={(e) => setMealCategory(e.target.value)}
           >
             <option>Choose...</option>
@@ -114,7 +128,11 @@ function ProfileForm(props) {
         </Form.Group>
       </Row>
 
-      <Button variant="primary" type="submit" disabled={disabledAll ? true : false}>
+      <Button
+        variant="primary"
+        type="submit"
+        disabled={disabledAll ? true : false}
+      >
         Submit
       </Button>
 

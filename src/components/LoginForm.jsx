@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Context } from "../App";
+import ApiRoute from "../ApiSettings";
 
 function LoginForm(props) {
   // const [username, setUserName] = useContext(Context);
@@ -12,7 +13,7 @@ function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(null);
 
-  //...fires after everytime username and/or error changes
+  //...fires after everytime userProfile and/or error changes
   useEffect(() => {
     if (userProfile) {
       setRedirect(true);
@@ -25,13 +26,12 @@ function LoginForm(props) {
 
   const submit = async (e) => {
     e.preventDefault();
-
-    const LOGIN_URL = "http://localhost:8000/api/login";
+    // const LOGIN_URL = "http://localhost:8000/api/login";
+    const LOGIN_URL = ApiRoute.LOGIN_PATH;
     const payLoad = {
       email,
       password,
     };
-
     const response = await fetch(LOGIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,6 +39,7 @@ function LoginForm(props) {
       body: JSON.stringify(payLoad),
     });
     const content = await response.json();
+    //...Login is successful but will call getUser() to effect redirect
     if (content?.jwt?.length > 0) {
       await getUser();
     } else if (content?.password_error) {
@@ -49,15 +50,15 @@ function LoginForm(props) {
   };
 
   const getUser = async () => {
-    const PROFILE_URL = "http://localhost:8000/api/user";
+    const PROFILE_URL = ApiRoute.AUTH_USER_PATH;
     const response = await fetch(PROFILE_URL, {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
     const content = await response.json();
-    console.log("***Profile Data:", content);
-    if (content.username) {
-      localStorage.setItem('profile', JSON.stringify(content))
+    if (content?.username || content?.user?.username) {
+      localStorage.setItem("profile", JSON.stringify(content));
+      console.log("***#### Saved Profile Data:", content);
       setUserProfile(content);
     }
   };
@@ -98,7 +99,7 @@ function LoginForm(props) {
         Submit
       </Button>
       <div>
-        <p>{error ? error : null}</p>
+        <p>{error}</p>
       </div>
     </Form>
   );

@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import ApiRoute from "../ApiSettings";
 
 export default function RightCardLayout() {
   const [profilePix, setProfilePix] = useState("");
@@ -10,15 +11,17 @@ export default function RightCardLayout() {
   const [fileObject, setFileObject] = useState({});
 
 
-  const BASE_URL = "http://localhost:8000"
-  const AVATAR_PATH = "api/avatar";
+  // const BASE_URL = "http://localhost:8000"
+  // const AVATAR_PATH = "api/avatar";
+  const BASE_URL = ApiRoute.API_DOMAIN
+  const AVATAR_URL = ApiRoute.AVATAR_PATH
   const IMAGE_PATH = ""
 
 
-  useEffect(() => {
-    console.log("Profile Pix: ", profilePix);
-    console.log("File Object: ", fileObject);
-  });
+  // useEffect(() => {
+  //   console.log("Profile Pix: ", profilePix);
+  //   console.log("File Object: ", fileObject);
+  // },[]);
 
   const getFile = (e) => {
     e.preventDefault();
@@ -36,7 +39,7 @@ export default function RightCardLayout() {
     e.preventDefault();
     const fData = new FormData();
     fData.append('profile_image', fileObject);
-    const response = await fetch(`${BASE_URL}/${AVATAR_PATH}`, {
+    const response = await fetch(`${AVATAR_URL}`, {
       method: "PATCH",
       // headers: { "Content-Type": "multipart/form-data" },
       credentials: "include",

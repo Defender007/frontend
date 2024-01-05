@@ -9,10 +9,11 @@ import LeftCardLayout from "../components/LeftCardLayout";
 export default function Profile(props) {
   return (
     <div>
-      Home{" "}
+      {/* Home{" "} */}
       {props?.profile?.username
-        ? `Hi ${props?.profile?.username}`
-        : "You are not authenticated"}
+        ? `Hi ${props?.profile?.username}`:props?.profile?.user ? `Hi ${props?.profile?.user?.username}`
+        : "You are not authenticated"
+        }
       <Container>
         <Row className="" style={{ backgroundColor: "#726d6d" }}>
           <Col>

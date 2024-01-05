@@ -22,7 +22,8 @@ function CenterCardLayout(props) {
                   {props.formTitle}
                 </h3>
               </Card.Title>
-              <Card.Text>{props.children}</Card.Text>
+              <Card.Text>{/* {props.children} */}</Card.Text>
+              {props.children}
             </Card.Body>
           </Card>
         </Col>

@@ -12,7 +12,7 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   // const [isLoaded, setIsLoaded] = useState(false);
 
-  console.log("App:", userProfile);
+  console.log("App UserProfile:", userProfile);
   useEffect(() => {
     const profile = JSON.parse(localStorage.getItem("profile"));
     if (profile) {
@@ -46,7 +46,7 @@ function App() {
         />
         <Route
           path="/login"
-          component={() => <Login setName={setUserProfile} login={true} />}
+          component={() => <Login /*setName={setUserProfile}*/ /*login={true}*/ />}
         />
         <Route path="/register" component={Register} />
       </Context.Provider>
