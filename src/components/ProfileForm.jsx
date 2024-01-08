@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Context } from "../App";
-import ApiRoute from "../ApiSettings";
+import ApiRoute from "../config/ApiSettings";
 
 function ProfileForm(props) {
   const [userProfile, setUserProfile] = useContext(Context);
@@ -40,7 +40,7 @@ function ProfileForm(props) {
   const updateSwitch = (e) => {
     const val = e.target.value;
     console.table("Value:", val);
-    console.log("Profile Value when SWITCH:", userProfile)
+    console.log("Profile Value when SWITCH:", userProfile);
     setDisableAll(!disabledAll);
   };
 

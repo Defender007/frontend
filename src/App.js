@@ -5,12 +5,15 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import { connect } from "./config/mqttService";
 
 export const Context = React.createContext("");
 function App() {
-  // const [username, setUserName] = useState("");
   const [userProfile, setUserProfile] = useState(null);
-  // const [isLoaded, setIsLoaded] = useState(false);
+  const [client, setCient] = useState(null);
+  const [message, setMessage] = useState(null);
+
+  const TOPIC = "orinlakantobad";
 
   console.log("App UserProfile:", userProfile);
   useEffect(() => {
@@ -19,6 +22,39 @@ function App() {
       setUserProfile(profile);
     }
   }, []);
+
+  useEffect(() => {
+    // Connect to MQTT broker on component mount
+    try {
+      const client = connect();
+      setCient(client);
+      console.log("CLIENT: ", client);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Cleanup function on component unmount
+    return () => {
+        if (client?.isConnected()) {
+          // Unsubscribe from the topic
+          client?.unsubscribe(TOPIC);
+          // Disconnect from the MQTT broker
+          client?.disconnect();
+      };
+    };
+  }, [client]);
+
+  useEffect(() => {
+    if (client) {
+      // Handle incoming messages
+      client.onMessageArrived = (message) => {
+        console.log(`Received message on topic ${message.destinationName}: ${message.payloadString}`);
+        // Do something with the received message
+        setMessage(message.payloadString);
+      };
+    }
+  }, [client]);
+
   return (
     <BrowserRouter>
       <Context.Provider value={[userProfile, setUserProfile]}>
@@ -46,7 +82,9 @@ function App() {
         />
         <Route
           path="/login"
-          component={() => <Login /*setName={setUserProfile}*/ /*login={true}*/ />}
+          component={() => (
+            <Login /*setName={setUserProfile}*/ /*login={true}*/ />
+          )}
         />
         <Route path="/register" component={Register} />
       </Context.Provider>

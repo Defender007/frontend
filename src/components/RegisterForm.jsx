@@ -2,7 +2,7 @@ import React, { SyntheticEvent, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Redirect } from "react-router";
-import ApiRoute from "../ApiSettings";
+import ApiRoute from "../config/ApiSettings";
 
 function RegisterForm(props) {
   const [username, setUserName] = useState("");
@@ -11,8 +11,8 @@ function RegisterForm(props) {
   const [redirect, setRedirect] = useState(false);
 
   // const URL = "http://localhost:8000/api/register";
-  const REGISTER_URL = ApiRoute.REGISTER_PATH
-  
+  const REGISTER_URL = ApiRoute.REGISTER_PATH;
+
   const submit = async (e) => {
     e.preventDefault();
     const payLoad = {

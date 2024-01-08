@@ -5,21 +5,34 @@ import Row from "react-bootstrap/Row";
 import RightCardLayout from "../components/RightCardLayout";
 import ProfileForm from "../components/ProfileForm";
 import LeftCardLayout from "../components/LeftCardLayout";
+import TransactionListTableLayout from "../components/TransactionListTableLayout";
+import TransactionTable from "../components/TransactionTable";
 
 export default function Profile(props) {
   return (
     <div>
       {/* Home{" "} */}
       {props?.profile?.username
-        ? `Hi ${props?.profile?.username}`:props?.profile?.user ? `Hi ${props?.profile?.user?.username}`
-        : "You are not authenticated"
-        }
+        ? `Hi ${props?.profile?.username}`
+        : props?.profile?.user
+        ? `Hi ${props?.profile?.user?.username}`
+        : "You are not authenticated"}
       <Container>
         <Row className="" style={{ backgroundColor: "#726d6d" }}>
           <Col>
             <LeftCardLayout>
               <ProfileForm />
             </LeftCardLayout>
+          </Col>
+          <Col sm={3}>
+            <RightCardLayout></RightCardLayout>
+          </Col>
+        </Row>
+        <Row className="" style={{ backgroundColor: "#726d6d" }}>
+          <Col>
+            <TransactionListTableLayout>
+              <TransactionTable/>
+            </TransactionListTableLayout>
           </Col>
           <Col sm={3}>
             <RightCardLayout></RightCardLayout>

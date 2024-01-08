@@ -3,20 +3,18 @@ import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import ApiRoute from "../ApiSettings";
+import ApiRoute from "../config/ApiSettings";
 
 export default function RightCardLayout() {
   const [profilePix, setProfilePix] = useState("");
   const [profilePixValue, setProfilePixValue] = useState("");
   const [fileObject, setFileObject] = useState({});
 
-
   // const BASE_URL = "http://localhost:8000"
   // const AVATAR_PATH = "api/avatar";
-  const BASE_URL = ApiRoute.API_DOMAIN
-  const AVATAR_URL = ApiRoute.AVATAR_PATH
-  const IMAGE_PATH = ""
-
+  const BASE_URL = ApiRoute.API_DOMAIN;
+  const AVATAR_URL = ApiRoute.AVATAR_PATH;
+  const IMAGE_PATH = "";
 
   // useEffect(() => {
   //   console.log("Profile Pix: ", profilePix);
@@ -38,17 +36,17 @@ export default function RightCardLayout() {
   const uploadPix = async (e) => {
     e.preventDefault();
     const fData = new FormData();
-    fData.append('profile_image', fileObject);
+    fData.append("profile_image", fileObject);
     const response = await fetch(`${AVATAR_URL}`, {
       method: "PATCH",
       // headers: { "Content-Type": "multipart/form-data" },
       credentials: "include",
       body: fData,
     });
-    const {profile_image} = await response.json();
+    const { profile_image } = await response.json();
     console.log("Content: ", profile_image);
     console.log("API Pix: ", `${BASE_URL}${profile_image}`);
-    setProfilePix(`${BASE_URL}${profile_image}`)
+    setProfilePix(`${BASE_URL}${profile_image}`);
   };
 
   return (

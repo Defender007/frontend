@@ -18,7 +18,8 @@ function LeftCardLayout(props) {
             {props.formTitle}
           </div>
         </Card.Title>
-        <Card.Text>{props.children}</Card.Text>
+        {/* <Card.Text></Card.Text> */}
+        {props.children}
       </Card.Body>
     </Card>
   );

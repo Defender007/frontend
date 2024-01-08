@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ApiRoute from "../ApiSettings";
+import ApiRoute from "../config/ApiSettings";
 
 function PageNavbar(props) {
   const [redirect, setRedirect] = useState(false);
@@ -34,7 +34,6 @@ function PageNavbar(props) {
     window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/register`);
   };
 
-
   if (redirect) {
     window.location.assign(ApiRoute.FRONTEND_DOMAIN);
   }
@@ -46,7 +45,9 @@ function PageNavbar(props) {
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
             <ButtonGroup aria-label="Basic example" size="sm" className="mb-2">
-              <Button variant="secondary" onClick={register}>Register</Button>
+              <Button variant="secondary" onClick={register}>
+                Register
+              </Button>
               <Button variant="secondary" onClick={login}>
                 Login
               </Button>
