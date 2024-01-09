@@ -2,11 +2,12 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import RightCardLayout from "../components/RightCardLayout";
+import ProfileImageCardLayout from "../components/ProfileImageCardLayout";
 import ProfileForm from "../components/ProfileForm";
 import LeftCardLayout from "../components/LeftCardLayout";
 import TransactionListTableLayout from "../components/TransactionListTableLayout";
 import TransactionTable from "../components/TransactionTable";
+import AccessControlFormLayout from  "../components/AccessControlFormLayout"
 
 export default function Profile(props) {
   return (
@@ -24,8 +25,8 @@ export default function Profile(props) {
               <ProfileForm />
             </LeftCardLayout>
           </Col>
-          <Col sm={3}>
-            <RightCardLayout></RightCardLayout>
+          <Col sm={3} style={{marginBottom: "10px"}}>
+            <ProfileImageCardLayout/>
           </Col>
         </Row>
         <Row className="" style={{ backgroundColor: "#726d6d" }}>
@@ -35,7 +36,7 @@ export default function Profile(props) {
             </TransactionListTableLayout>
           </Col>
           <Col sm={3}>
-            <RightCardLayout></RightCardLayout>
+            <AccessControlFormLayout brokerMessage={props.brokerdata}/>
           </Col>
         </Row>
       </Container>

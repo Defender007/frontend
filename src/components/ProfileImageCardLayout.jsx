@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ApiRoute from "../config/ApiSettings";
 
-export default function RightCardLayout() {
+export default function ProfileImageCardLayout() {
   const [profilePix, setProfilePix] = useState("");
   const [profilePixValue, setProfilePixValue] = useState("");
   const [fileObject, setFileObject] = useState({});
@@ -82,7 +82,7 @@ export default function RightCardLayout() {
             }}
             onClick={() => setProfilePixValue("")}
           >
-            Submit
+            Upload
           </Button>
         </Form>
       </Card.Body>

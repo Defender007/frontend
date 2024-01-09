@@ -11,7 +11,7 @@ export const Context = React.createContext("");
 function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [client, setCient] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [brokerMessage, setBrokerMessage] = useState(null);
 
   const TOPIC = "orinlakantobad";
 
@@ -46,11 +46,9 @@ function App() {
 
   useEffect(() => {
     if (client) {
-      // Handle incoming messages
       client.onMessageArrived = (message) => {
         console.log(`Received message on topic ${message.destinationName}: ${message.payloadString}`);
-        // Do something with the received message
-        setMessage(message.payloadString);
+        setBrokerMessage(message.payloadString);
       };
     }
   }, [client]);
@@ -77,6 +75,8 @@ function App() {
               username={userProfile?.username}
               setName={setUserProfile}
               profile={userProfile}
+              brokerdata={brokerMessage}
+
             />
           )}
         />

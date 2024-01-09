@@ -9,7 +9,8 @@ class ApiRoute {
   static LOGOUT_PATH = `${ApiRoute.BASE_URL}/logout`;
   static REGISTER_PATH = `${ApiRoute.BASE_URL}/register`;
   static AVATAR_PATH = `${ApiRoute.BASE_URL}/avatar`;
-  static TRANSACTION_PATH = `${ApiRoute.BASE_URL}/transactions`;
+  static TRANSACTION_LIST_PATH = `${ApiRoute.BASE_URL}/transactions`;
+  static TRANSACTION_ACTRL_URL = `${ApiRoute.BASE_URL}/transactions/access-control`;
 }
 
 export default ApiRoute;
