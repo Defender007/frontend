@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -7,12 +7,11 @@ import ProfileForm from "../components/ProfileForm";
 import LeftCardLayout from "../components/LeftCardLayout";
 import TransactionListTableLayout from "../components/TransactionListTableLayout";
 import TransactionTable from "../components/TransactionTable";
-import AccessControlFormLayout from  "../components/AccessControlFormLayout"
+import AccessControlFormLayout from "../components/AccessControlFormLayout";
 
-export default function Profile(props) {
+function Profile(props) {
   return (
     <div>
-      {/* Home{" "} */}
       {props?.profile?.username
         ? `Hi ${props?.profile?.username}`
         : props?.profile?.user
@@ -25,25 +24,25 @@ export default function Profile(props) {
               <ProfileForm />
             </LeftCardLayout>
           </Col>
-          <Col sm={3} style={{marginBottom: "10px"}}>
-            <ProfileImageCardLayout/>
+          <Col sm={3} style={{ marginBottom: "10px" }}>
+            <ProfileImageCardLayout />
           </Col>
         </Row>
         <Row className="" style={{ backgroundColor: "#726d6d" }}>
           <Col>
             <TransactionListTableLayout>
-              <TransactionTable/>
+              <TransactionTable userprofile={props?.profile} />
             </TransactionListTableLayout>
           </Col>
           <Col sm={3}>
-            <AccessControlFormLayout brokerMessage={props.brokerdata}/>
+            <AccessControlFormLayout brokerMessage={props.brokerdata} />
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
-
+export default memo(Profile);
 // const URL = "http://localhost:8000/api/register";
 
 // const response = await fetch(URL, {

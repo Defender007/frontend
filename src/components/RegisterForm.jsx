@@ -10,7 +10,6 @@ function RegisterForm(props) {
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  // const URL = "http://localhost:8000/api/register";
   const REGISTER_URL = ApiRoute.REGISTER_PATH;
 
   const submit = async (e) => {

@@ -15,7 +15,7 @@ function LeftCardLayout(props) {
           //   marginRight: "auto",
           // }}
           >
-            {props.formTitle}
+            {props?.formTitle}
           </div>
         </Card.Title>
         {/* <Card.Text></Card.Text> */}

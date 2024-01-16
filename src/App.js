@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import PageNavbar from "./components/PageNavbar";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Access from "./pages/Access";
 import { connect } from "./config/mqttService";
 
 export const Context = React.createContext("");
 function App() {
   const [userProfile, setUserProfile] = useState(null);
-  const [client, setCient] = useState(null);
+  const [client, setClient] = useState(null);
   const [brokerMessage, setBrokerMessage] = useState(null);
 
   const TOPIC = "orinlakantobad";
 
-  console.log("App UserProfile:", userProfile);
+  console.log("App @UserProfile:", userProfile);
   useEffect(() => {
     const profile = JSON.parse(localStorage.getItem("profile"));
     if (profile) {
@@ -26,36 +27,38 @@ function App() {
   useEffect(() => {
     // Connect to MQTT broker on component mount
     try {
-      const client = connect();
-      setCient(client);
-      console.log("CLIENT: ", client);
+      const mqttClient = connect();
+      setClient(mqttClient);
+      // console.log("CLIENT: ", client);
     } catch (error) {
-      console.log(error);
+      console.log("#$#$#$#$MQTT Client-eroor: ", error.message);
     }
 
     // Cleanup function on component unmount
     return () => {
-        if (client?.isConnected()) {
-          // Unsubscribe from the topic
-          client?.unsubscribe(TOPIC);
-          // Disconnect from the MQTT broker
-          client?.disconnect();
-      };
+      if (client?.isConnected()) {
+        // Unsubscribe from the topic
+        client?.unsubscribe(TOPIC);
+        // Disconnect from the MQTT broker
+        client?.disconnect();
+      }
     };
-  }, [client]);
+  }, []);
 
-  useEffect(() => {
-    if (client) {
-      client.onMessageArrived = (message) => {
-        console.log(`Received message on topic ${message.destinationName}: ${message.payloadString}`);
-        setBrokerMessage(message.payloadString);
-      };
-    }
-  }, [client]);
+  // useEffect(() => {
+  //   if (client) {
+  //     client.onMessageArrived = (message) => {
+  //       console.log(
+  //         `Received message on topic ${message.destinationName}: ${message.payloadString}`
+  //       );
+  //       setBrokerMessage(message.payloadString);
+  //     };
+  //   }
+  // }, [client]);
 
   return (
     <BrowserRouter>
-      <Context.Provider value={[userProfile, setUserProfile]}>
+      <Context.Provider value={{profile:[userProfile, setUserProfile], mqttclient:client}}>
         <PageNavbar setProfile={setUserProfile} />
         <Route
           path="/"
@@ -75,8 +78,7 @@ function App() {
               username={userProfile?.username}
               setName={setUserProfile}
               profile={userProfile}
-              brokerdata={brokerMessage}
-
+              // brokerdata={brokerMessage}
             />
           )}
         />
@@ -87,9 +89,13 @@ function App() {
           )}
         />
         <Route path="/register" component={Register} />
+        <Route
+          path="/access-gate"
+          component={() => <Access brokerdata={brokerMessage} />}
+        />
       </Context.Provider>
     </BrowserRouter>
   );
 }
 
-export default App;
+export default memo(App);

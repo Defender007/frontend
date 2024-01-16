@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, memo } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -7,7 +7,7 @@ import { Context } from "../App";
 import ApiRoute from "../config/ApiSettings";
 
 function ProfileForm(props) {
-  const [userProfile, setUserProfile] = useContext(Context);
+  const {profile:[userProfile, setUserProfile]} = useContext(Context);
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [department, setDeptartment] = useState("");
@@ -23,11 +23,11 @@ function ProfileForm(props) {
   // },[userProfile, setUserProfile])
 
   useEffect(() => {
-    console.log("State Context in Profile Form:", userProfile);
+    console.log("State Context @Profile Form:", userProfile);
 
     if (userProfile?.user) {
-      setFirstName(userProfile?.user.first_name);
-      setLastName(userProfile?.user.last_name);
+      setFirstName(userProfile?.user?.first_name);
+      setLastName(userProfile?.user?.last_name);
       setDeptartment(userProfile?.department);
       setMealCategory(userProfile?.meal_category);
     } else if (userProfile?.username) {
@@ -37,7 +37,7 @@ function ProfileForm(props) {
   }, [userProfile]);
 
   //...handles Switch Events
-  const updateSwitch = (e) => {
+  const editSwitch = (e) => {
     const val = e.target.value;
     console.table("Value:", val);
     console.log("Profile Value when SWITCH:", userProfile);
@@ -47,7 +47,6 @@ function ProfileForm(props) {
   //...handles Form submission Events
   const submit = async (e) => {
     e.preventDefault();
-    // const PROFILE_URL = "http://localhost:8000/api/profile";
     const PROFILE_URL = ApiRoute.PROFILE_PATH;
     const payLoad = {
       first_name,
@@ -55,7 +54,6 @@ function ProfileForm(props) {
       department,
       meal_category,
     };
-    console.log("TRACKING PROFILE OBJECT in Profile Form:", userProfile);
     const REQUEST_METHOD = userProfile?.user ? "PATCH" : "POST";
     const response = await fetch(PROFILE_URL, {
       method: REQUEST_METHOD,
@@ -140,9 +138,9 @@ function ProfileForm(props) {
         // disabled={switchStatus}
         value={switchStatus}
         type="switch"
-        label="Update profile"
+        label="Edit profile"
         id="disabled-custom-switch"
-        onClick={updateSwitch}
+        onClick={editSwitch}
         style={{
           float: "right",
         }}
@@ -151,4 +149,4 @@ function ProfileForm(props) {
   );
 }
 
-export default ProfileForm;
+export default memo(ProfileForm);

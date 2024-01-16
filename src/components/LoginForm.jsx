@@ -6,8 +6,7 @@ import { Context } from "../App";
 import ApiRoute from "../config/ApiSettings";
 
 function LoginForm(props) {
-  // const [username, setUserName] = useContext(Context);
-  const [userProfile, setUserProfile] = useContext(Context);
+  const {profile:[userProfile, setUserProfile]} = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
@@ -21,12 +20,10 @@ function LoginForm(props) {
     if (!userProfile) {
       setRedirect(false);
     }
-    console.log("Effect Error:", error);
   }, [userProfile, error]);
 
   const submit = async (e) => {
     e.preventDefault();
-    // const LOGIN_URL = "http://localhost:8000/api/login";
     const LOGIN_URL = ApiRoute.LOGIN_PATH;
     const payLoad = {
       email,
@@ -58,7 +55,7 @@ function LoginForm(props) {
     const content = await response.json();
     if (content?.username || content?.user?.username) {
       localStorage.setItem("profile", JSON.stringify(content));
-      console.log("***#### Saved Profile Data:", content);
+      console.log("***#### Profile Saved @LoginForm:", content);
       setUserProfile(content);
     }
   };
@@ -66,6 +63,7 @@ function LoginForm(props) {
   if (redirect) {
     return <Redirect to="/profile" />;
   }
+  
   return (
     <Form onSubmit={submit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
