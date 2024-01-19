@@ -1,28 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ApiRoute from "../config/ApiSettings";
+import { Context } from "../App";
 
 export default function ProfileImageCardLayout() {
+  const {
+    profile: [userProfile, setUserProfile],
+  } = useContext(Context);
+
   const [profilePix, setProfilePix] = useState("");
   const [profilePixValue, setProfilePixValue] = useState("");
   const [fileObject, setFileObject] = useState({});
+  const [disable, setDisable] = useState(true);
 
-  // const BASE_URL = "http://localhost:8000"
-  // const AVATAR_PATH = "api/avatar";
   const BASE_URL = ApiRoute.API_DOMAIN;
-  const AVATAR_URL = ApiRoute.AVATAR_PATH;
-  const IMAGE_PATH = "";
+  const AVATAR_URL = ApiRoute.AVATAR_URL;
+  const IMAGE_PATH = userProfile?.profile_image;
 
-  // useEffect(() => {
-  //   console.log("Profile Pix: ", profilePix);
-  //   console.log("File Object: ", fileObject);
-  // },[]);
+  useEffect(() => {
+    setProfilePix(`${BASE_URL}${IMAGE_PATH}`);
+  }, [IMAGE_PATH]);
 
   const getFile = (e) => {
     e.preventDefault();
+    setDisable(false);
     setProfilePixValue(e.target.value);
     setFileObject(e.target.files[0]);
     try {
@@ -35,6 +39,7 @@ export default function ProfileImageCardLayout() {
 
   const uploadPix = async (e) => {
     e.preventDefault();
+    setDisable(true);
     const fData = new FormData();
     fData.append("profile_image", fileObject);
     const response = await fetch(`${AVATAR_URL}`, {
@@ -44,15 +49,15 @@ export default function ProfileImageCardLayout() {
       body: fData,
     });
     const { profile_image } = await response.json();
-    console.log("Content: ", profile_image);
-    console.log("API Pix: ", `${BASE_URL}${profile_image}`);
+    const new_profile = { ...userProfile, profile_image };
+    localStorage.setItem("profile", JSON.stringify(new_profile));
     setProfilePix(`${BASE_URL}${profile_image}`);
   };
 
   return (
     <Card>
       <Image
-        src={profilePix ? profilePix : "headmug.jpeg"}
+        src={profilePix || "headmug.jpeg"}
         roundedCircle
         width={profilePix ? 170 : 150}
         height={profilePix ? 170 : 150}
@@ -80,7 +85,10 @@ export default function ProfileImageCardLayout() {
             style={{
               width: "100%",
             }}
-            onClick={() => setProfilePixValue("")}
+            disabled={disable}
+            onClick={() => {
+              setProfilePixValue("");
+            }}
           >
             Upload
           </Button>

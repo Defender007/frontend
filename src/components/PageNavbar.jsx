@@ -4,24 +4,16 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ApiRoute from "../config/ApiSettings";
+import ApiRoute, {ApiLogout} from "../config/ApiSettings";
 
 function PageNavbar(props) {
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
 
   //...logout Handler
   const logout = async (e) => {
-    // const URL = "http://localhost:8000/api/logout";
-    const LOGOUT_URL = ApiRoute.LOGOUT_PATH;
-
-    await fetch(LOGOUT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-    localStorage.clear("profile");
-    props.setProfile(null);
-    setRedirect(true);
+    await ApiLogout()
+    props?.setProfile(null);
+    // setRedirect(true);
   };
 
   //...login Handler
@@ -34,9 +26,9 @@ function PageNavbar(props) {
     window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/register`);
   };
 
-  if (redirect) {
-    window.location.assign(ApiRoute.FRONTEND_DOMAIN);
-  }
+  // if (redirect) {
+  //   window.location.assign(ApiRoute.FRONTEND_DOMAIN);
+  // }
   return (
     <Navbar className="bg-body-tertiary">
       <Container>

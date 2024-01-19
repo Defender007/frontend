@@ -47,7 +47,7 @@ function ProfileForm(props) {
   //...handles Form submission Events
   const submit = async (e) => {
     e.preventDefault();
-    const PROFILE_URL = ApiRoute.PROFILE_PATH;
+    const PROFILE_URL = ApiRoute.PROFILE_URL;
     const payLoad = {
       first_name,
       last_name,
@@ -111,7 +111,7 @@ function ProfileForm(props) {
         <Form.Group as={Col} controlId="formGridMealCategory">
           <Form.Label>Meal Category</Form.Label>
           <Form.Select
-            defaultValue={meal_category || "Choose..."}
+            // defaultValue={meal_category || "Choose..."}
             value={meal_category}
             disabled={!!disabledAll}
             onChange={(e) => setMealCategory(e.target.value)}

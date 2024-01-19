@@ -3,14 +3,25 @@ class ApiRoute {
   static API_DOMAIN = "http://localhost:8000"; // to be read from .env on PROD
   static BASE_PATH = "/api/v1";
   static BASE_URL = `${ApiRoute.API_DOMAIN}${ApiRoute.BASE_PATH}`;
-  static PROFILE_PATH = `${ApiRoute.BASE_URL}/profiles`;
-  static LOGIN_PATH = `${ApiRoute.BASE_URL}/login`;
-  static AUTH_USER_PATH = `${ApiRoute.BASE_URL}/auth-user`;
-  static LOGOUT_PATH = `${ApiRoute.BASE_URL}/logout`;
-  static REGISTER_PATH = `${ApiRoute.BASE_URL}/register`;
-  static AVATAR_PATH = `${ApiRoute.BASE_URL}/avatar`;
-  static TRANSACTION_LIST_PATH = `${ApiRoute.BASE_URL}/transactions`;
+  static PROFILE_URL = `${ApiRoute.BASE_URL}/profiles`;
+  static LOGIN_URL = `${ApiRoute.BASE_URL}/login`;
+  static AUTH_USER_URL = `${ApiRoute.BASE_URL}/auth-user`;
+  static LOGOUT_URL = `${ApiRoute.BASE_URL}/logout`;
+  static REGISTER_URL = `${ApiRoute.BASE_URL}/register`;
+  static AVATAR_URL = `${ApiRoute.BASE_URL}/avatar`;
+  static TRANSACTION_LIST_URL = `${ApiRoute.BASE_URL}/transactions`;
   static TRANSACTION_ACTRL_URL = `${ApiRoute.BASE_URL}/transactions/access-control`;
+  static TRANSACTION_OWNER_DETAILS_URL = `${ApiRoute.BASE_URL}/transactions/owner-details`;
+}
+
+export async function ApiLogout(url=ApiRoute.LOGOUT_URL, metd='POST', cred=false) {
+  await fetch(url, {
+    method: metd,
+    headers: { "Content-Type": "application/json" },
+    credentials: cred ? "include": 'omit',
+  });
+  localStorage.removeItem("profile");
+  window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/login`);
 }
 
 export default ApiRoute;

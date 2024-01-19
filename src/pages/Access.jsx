@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import LeftCardLayout from "../components/LeftCardLayout";
 import { Context } from "../App";
+import AccessRightFeeder from '../components/AccessRightFeeder'
 
 function Access() {
   const { mqttclient } = useContext(Context);
@@ -29,7 +30,8 @@ function Access() {
       <Container>
         <Row className="" style={{ backgroundColor: "#726d6d" }}>
           <Col>
-            <LeftCardLayout>Section A {brokerMessage?.destinationName}</LeftCardLayout>
+            <LeftCardLayout><AccessRightFeeder brokerdata={brokerMessage}/>
+            Section A {brokerMessage?.destinationName}</LeftCardLayout>
           </Col>
           <Col>
             <LeftCardLayout>Section B {brokerMessage?.payloadString}</LeftCardLayout>

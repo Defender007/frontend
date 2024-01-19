@@ -12,7 +12,6 @@ export const Context = React.createContext("");
 function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [client, setClient] = useState(null);
-  const [brokerMessage, setBrokerMessage] = useState(null);
 
   const TOPIC = "orinlakantobad";
 
@@ -25,11 +24,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Connect to MQTT broker on component mount
+    //...Connect to MQTT broker on component mount
     try {
       const mqttClient = connect();
       setClient(mqttClient);
-      // console.log("CLIENT: ", client);
     } catch (error) {
       console.log("#$#$#$#$MQTT Client-eroor: ", error.message);
     }
@@ -37,40 +35,21 @@ function App() {
     // Cleanup function on component unmount
     return () => {
       if (client?.isConnected()) {
-        // Unsubscribe from the topic
+        //...Unsubscribe from the topic
         client?.unsubscribe(TOPIC);
-        // Disconnect from the MQTT broker
+        //...Disconnect from the MQTT broker
         client?.disconnect();
       }
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (client) {
-  //     client.onMessageArrived = (message) => {
-  //       console.log(
-  //         `Received message on topic ${message.destinationName}: ${message.payloadString}`
-  //       );
-  //       setBrokerMessage(message.payloadString);
-  //     };
-  //   }
-  // }, [client]);
-
   return (
     <BrowserRouter>
-      <Context.Provider value={{profile:[userProfile, setUserProfile], mqttclient:client}}>
+      <Context.Provider
+        value={{ profile: [userProfile, setUserProfile], mqttclient: client }}
+      >
         <PageNavbar setProfile={setUserProfile} />
-        <Route
-          path="/"
-          exact
-          component={() => (
-            <Home
-            /* profile={userProfile}
-                isLoaded={isLoaded}
-                setPageLoad={setIsLoaded} */
-            />
-          )}
-        />
+        <Route path="/" exact component={() => <Home />} />
         <Route
           path="/profile"
           component={() => (
@@ -78,21 +57,12 @@ function App() {
               username={userProfile?.username}
               setName={setUserProfile}
               profile={userProfile}
-              // brokerdata={brokerMessage}
             />
           )}
         />
-        <Route
-          path="/login"
-          component={() => (
-            <Login /*setName={setUserProfile}*/ /*login={true}*/ />
-          )}
-        />
+        <Route path="/login" component={() => <Login />} />
         <Route path="/register" component={Register} />
-        <Route
-          path="/access-gate"
-          component={() => <Access brokerdata={brokerMessage} />}
-        />
+        <Route path="/access-gate" component={() => <Access />} />
       </Context.Provider>
     </BrowserRouter>
   );

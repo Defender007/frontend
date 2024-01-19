@@ -9,7 +9,7 @@ export default function TransactionTable(props) {
   const [localError, setLocalError] = useState(null);
 
   useEffect(() => {
-    const TRANSACTIONS_URL = ApiRoute.TRANSACTION_LIST_PATH;
+    const TRANSACTIONS_URL = ApiRoute.TRANSACTION_LIST_URL;
 
     async function fetchData() {
       try {
@@ -37,10 +37,13 @@ export default function TransactionTable(props) {
 
     const admin =
       props?.userprofile?.user?.is_superuser ||
-      props?.userprofile?.is_superuser;
+      props?.userProfile?.user?.is_staff ||
+      props?.userprofile?.is_superuser ||
+      props?.userprofile?.is_staff;
     if (admin) {
       fetchData();
     }
+    fetchData();
   }, []);
 
   const columns = [
@@ -57,7 +60,7 @@ export default function TransactionTable(props) {
   return (
     <Table striped="columns">
       <thead>
-        <tr style={{ fontSize: "x-small" }} key={'tr-0'}>
+        <tr style={{ fontSize: "x-small" }} key={"tr-0"}>
           {columns?.map((column, idx) => (
             <th key={`${column}-${idx}`}>{column}</th>
           ))}
