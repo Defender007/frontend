@@ -14,14 +14,28 @@ class ApiRoute {
   static TRANSACTION_OWNER_DETAILS_URL = `${ApiRoute.BASE_URL}/transactions/owner-details`;
 }
 
-export async function ApiLogout(url=ApiRoute.LOGOUT_URL, metd='POST', cred=false) {
+export async function ApiLogout(
+  url = ApiRoute.LOGOUT_URL,
+  metd = "POST",
+  cred = false
+) {
   await fetch(url, {
     method: metd,
     headers: { "Content-Type": "application/json" },
-    credentials: cred ? "include": 'omit',
+    credentials: cred ? "include" : "omit",
   });
   localStorage.removeItem("profile");
   window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/login`);
+}
+
+export function Capitalize(params) {
+  try {
+    var inputString = params;
+    var outputString = inputString.charAt(0).toUpperCase() + inputString.slice(1);
+    return outputString;
+  } catch (error) {
+    return "Staff"
+  }
 }
 
 export default ApiRoute;

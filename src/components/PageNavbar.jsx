@@ -26,6 +26,15 @@ function PageNavbar(props) {
     window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/register`);
   };
 
+  //...Access-board Handler
+  const accessBoard = (e) => {
+    window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/access-gate`);
+  };
+    //...Access board Handler
+    const profile = (e) => {
+      window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/profile`);
+    };
+
   // if (redirect) {
   //   window.location.assign(ApiRoute.FRONTEND_DOMAIN);
   // }
@@ -37,6 +46,12 @@ function PageNavbar(props) {
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
             <ButtonGroup aria-label="Basic example" size="sm" className="mb-2">
+            <Button variant="secondary" onClick={accessBoard}>
+                Access Board
+              </Button>
+              <Button variant="secondary" onClick={profile}>
+                Profile
+              </Button>
               <Button variant="secondary" onClick={register}>
                 Register
               </Button>
