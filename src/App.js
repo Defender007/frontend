@@ -9,9 +9,12 @@ import Access from "./pages/Access";
 import { connect } from "./config/mqttService";
 
 export const Context = React.createContext("");
+export const ReportContext = React.createContext("");
+
 function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [client, setClient] = useState(null);
+  const [fiterQuery, setFiterQuery] = useState(null)
 
   const TOPIC = "orinlakantobad";
 
@@ -48,6 +51,7 @@ function App() {
       <Context.Provider
         value={{ profile: [userProfile, setUserProfile], mqttclient: client }}
       >
+      <ReportContext.Provider value={[fiterQuery, setFiterQuery]}>
         <PageNavbar setProfile={setUserProfile} />
         <Route path="/" exact component={() => <Home />} />
         <Route
@@ -63,6 +67,7 @@ function App() {
         <Route path="/login" component={() => <Login />} />
         <Route path="/register" component={Register} />
         <Route path="/access-gate" component={() => <Access />} />
+        </ReportContext.Provider>
       </Context.Provider>
     </BrowserRouter>
   );

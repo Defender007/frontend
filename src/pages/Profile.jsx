@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -7,9 +7,11 @@ import ProfileForm from "../components/ProfileForm";
 import LeftCardLayout from "../components/LeftCardLayout";
 import TransactionListTableLayout from "../components/TransactionListTableLayout";
 import TransactionTable from "../components/TransactionTable";
-import AccessControlFormLayout from "../components/AccessControlFormLayout";
+import ReportSelectorForm from "../components/ReportSelectorForm";
+
 
 function Profile(props) {
+  // const [fiterQuery, setFiterQuery] = useState(null);
   return (
     <div>
       {props?.profile?.username
@@ -35,18 +37,12 @@ function Profile(props) {
             </TransactionListTableLayout>
           </Col>
           <Col sm={3}>
-            <AccessControlFormLayout brokerMessage={props.brokerdata} />
+            <ReportSelectorForm />
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
-export default memo(Profile);
-// const URL = "http://localhost:8000/api/register";
 
-// const response = await fetch(URL, {
-//   headers: { "Content-Type": "application/json" },
-//   body: JSON.stringify(payLoad),
-// });
-// const content = await response.json();
+export default memo(Profile);

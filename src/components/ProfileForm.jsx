@@ -4,15 +4,18 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Context } from "../App";
-import ApiRoute from "../config/ApiSettings";
+import ApiRoute, { ApiLogout } from "../config/ApiSettings";
 
 function ProfileForm(props) {
-  const {profile:[userProfile, setUserProfile]} = useContext(Context);
+  const {
+    profile: [userProfile, setUserProfile],
+  } = useContext(Context);
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
+  const [uid, setUid] = useState("");
   const [department, setDeptartment] = useState("");
   const [meal_category, setMealCategory] = useState(1);
-  const [switchStatus, setSwitchStatus] = useState("on");
+  const [disabledOne, setDisabledOne] = useState(true);
   const [disabledAll, setDisableAll] = useState(true);
 
   // useEffect(()=>{
@@ -29,6 +32,7 @@ function ProfileForm(props) {
       setFirstName(userProfile?.user?.first_name);
       setLastName(userProfile?.user?.last_name);
       setDeptartment(userProfile?.department);
+      setUid(userProfile?.reader_uid);
       setMealCategory(userProfile?.meal_category);
     } else if (userProfile?.username) {
       setFirstName(userProfile?.first_name);
@@ -36,11 +40,16 @@ function ProfileForm(props) {
     }
   }, [userProfile]);
 
+  useEffect(() => {
+    if (userProfile?.user?.is_superuser) {
+      setDisabledOne(false);
+    } else {
+      setDisabledOne(true);
+    }
+  }, [disabledOne]);
+
   //...handles Switch Events
   const editSwitch = (e) => {
-    const val = e.target.value;
-    console.table("Value:", val);
-    console.log("Profile Value when SWITCH:", userProfile);
     setDisableAll(!disabledAll);
   };
 
@@ -54,19 +63,23 @@ function ProfileForm(props) {
       department,
       meal_category,
     };
-    const REQUEST_METHOD = userProfile?.user ? "PATCH" : "POST";
-    const response = await fetch(PROFILE_URL, {
-      method: REQUEST_METHOD,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payLoad),
-    });
-    const content = await response.json();
-    if (content?.id) {
-      localStorage.setItem("profile", JSON.stringify(content));
-      console.log("Content:", content);
-      setDisableAll(!disabledAll);
-      setUserProfile(content);
+    try {
+      const REQUEST_METHOD = userProfile?.user ? "PATCH" : "POST";
+      const response = await fetch(PROFILE_URL, {
+        method: REQUEST_METHOD,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payLoad),
+      });
+      const content = await response.json();
+      if (content?.id) {
+        localStorage.setItem("profile", JSON.stringify(content));
+        console.log("Content:", content);
+        setDisableAll(!disabledAll);
+        setUserProfile(content);
+      }
+    } catch (error) {
+      await ApiLogout();
     }
   };
 
@@ -108,12 +121,23 @@ function ProfileForm(props) {
           />
         </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridMealCategory">
+        <Form.Group as={Col} controlId="formReaderUid">
+          <Form.Label>UID</Form.Label>
+          <Form.Control
+            type="text"
+            value={uid}
+            placeholder="UID"
+            disabled={disabledOne || disabledAll}
+            onChange={(e) => setUid(e.target.value)}
+          />
+        </Form.Group>
+
+        {/* <Form.Group as={Col} controlId="formGridMealCategory">
           <Form.Label>Meal Category</Form.Label>
           <Form.Select
             // defaultValue={meal_category || "Choose..."}
             value={meal_category}
-            disabled={!!disabledAll}
+            disabled={disabledOne || disabledAll}
             onChange={(e) => setMealCategory(e.target.value)}
           >
             <option>Choose...</option>
@@ -123,7 +147,19 @@ function ProfileForm(props) {
             <option>4</option>
             <option>5</option>
           </Form.Select>
+        </Form.Group> */}
+
+        <Form.Group as={Col} controlId="formGridMealCategory">
+          <Form.Label>Meal Category</Form.Label>
+          <Form.Control
+            type="number"
+            value={meal_category}
+            placeholder="Meal Category"
+            disabled={disabledOne || disabledAll}
+            onChange={(e) => setMealCategory(e.target.value)}
+          />
         </Form.Group>
+        
       </Row>
 
       <Button
@@ -136,7 +172,7 @@ function ProfileForm(props) {
 
       <Form.Check // prettier-ignore
         // disabled={switchStatus}
-        value={switchStatus}
+        // value={switchStatus}
         type="switch"
         label="Edit profile"
         id="disabled-custom-switch"

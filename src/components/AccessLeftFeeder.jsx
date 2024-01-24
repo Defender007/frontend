@@ -43,7 +43,6 @@ export default function AccessLeftFeeder({ userData }) {
         className={
           grant_type === ACCESS_GRANTED ? "badge bg-success" : "badge bg-danger"
         }
-        // bg={grant_type === ACCESS_GRANTED ? "success" : "danger"}
         style={{
           bordeRadius: "0px!important",
           fontSize: grant_type === ACCESS_GRANTED ? "71px" : "77px",

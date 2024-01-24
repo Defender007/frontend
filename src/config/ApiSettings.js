@@ -19,13 +19,20 @@ export async function ApiLogout(
   metd = "POST",
   cred = false
 ) {
-  await fetch(url, {
-    method: metd,
-    headers: { "Content-Type": "application/json" },
-    credentials: cred ? "include" : "omit",
-  });
+
+ try {
+   await fetch(url, {
+     method: metd,
+     headers: { "Content-Type": "application/json" },
+     credentials: cred ? "include" : "omit",
+   });
+   localStorage.removeItem("profile");
+   window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/login`);
+ } catch (error) {
+  console.log("!!!!!!!!!!!!!!!API Logout Error: ", error.message);
   localStorage.removeItem("profile");
-  window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/login`);
+  window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/`);
+ }
 }
 
 export function Capitalize(params) {

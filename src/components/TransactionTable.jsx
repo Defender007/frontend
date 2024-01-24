@@ -1,19 +1,25 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Table from "react-bootstrap/Table";
-import ApiRoute from "../config/ApiSettings";
+import ApiRoute, { ApiLogout } from "../config/ApiSettings";
+import { ReportContext } from "../App";
 
 export default function TransactionTable(props) {
   const [transactions, setTransactions] = useState([]);
-  const [redirect, setRedirect] = useState(false);
-  const [localError, setLocalError] = useState(null);
+  //...this context is set in ReportSelectorForm
+  const [filterQuery, setFilterQuery] = useContext(ReportContext);
 
   useEffect(() => {
     const TRANSACTIONS_URL = ApiRoute.TRANSACTION_LIST_URL;
+    console.log("#####@@@@@#### Filter Query:", filterQuery);
+    const { report_type, sort_option } = filterQuery || {};
+    const TRANSACTIONS_URL_WITH_QUERY = filterQuery
+      ? `${TRANSACTIONS_URL}/?report-type=${report_type}&sort-option=${sort_option}`
+      : TRANSACTIONS_URL;
 
     async function fetchData() {
       try {
-        const response = await fetch(TRANSACTIONS_URL, {
+        const response = await fetch(TRANSACTIONS_URL_WITH_QUERY, {
           headers: { "Content-Type": "application/json" },
           credentials: "include",
         });
@@ -22,16 +28,19 @@ export default function TransactionTable(props) {
           setTransactions([]);
         }
         if (content?.auth_error) {
-          console.log("#####Transaction Auth_Error:", content);
-          localStorage.removeItem("profile");
-          throw new Error(JSON.stringify(content));
+          await ApiLogout();
         }
         if (content?.length > 0) {
           setTransactions(content);
           console.log("Transaction List:", content);
         }
       } catch (error) {
-        window.location.assign(`${ApiRoute.FRONTEND_DOMAIN}/login`);
+        // console.log("Erro Failed: ", error.message);
+        if (error.message.includes("Failed to fetch")) {
+          console.error("Network error: Failed to fetch data", error.message);
+          await ApiLogout();
+        }
+        console.error(error.message);
       }
     }
 
@@ -43,8 +52,8 @@ export default function TransactionTable(props) {
     if (admin) {
       fetchData();
     }
-    fetchData();
-  }, []);
+    // fetchData();
+  }, [filterQuery]);
 
   const columns = [
     "#",
@@ -54,8 +63,8 @@ export default function TransactionTable(props) {
     "Swipe Count",
     "Raw Payload",
     "Authorized By",
-    "Transaction Date",
     "Grant Type",
+    "Transaction Date",
   ];
   return (
     <Table striped="columns">
@@ -70,7 +79,7 @@ export default function TransactionTable(props) {
         {transactions
           ? transactions.map((xtion, idx) => (
               <tr key={xtion?.id}>
-                <td>{idx}</td>
+                <td>{`${idx + 1}`}</td>
                 <td>{xtion?.owner?.user?.username}</td>
                 <td>{xtion?.reader_uid}</td>
                 <td>{xtion?.access_point}</td>

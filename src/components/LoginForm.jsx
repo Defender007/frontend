@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Context } from "../App";
-import ApiRoute from "../config/ApiSettings";
+import ApiRoute, {ApiLogout} from "../config/ApiSettings";
 
 function LoginForm(props) {
   const {
@@ -31,21 +31,25 @@ function LoginForm(props) {
       email,
       password,
     };
-    const response = await fetch(LOGIN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payLoad),
-    });
-    const content = await response.json();
-    //...Login is successful but will call getUser()
-    if (content?.jwt?.length > 0) {
-      await getUser();
-    } else if (content?.password_error) {
-      setError(content?.password_error);
-    } else if (content?.invalid_user_error) {
-      setError(content?.invalid_user_error);
-    }
+ try {
+     const response = await fetch(LOGIN_URL, {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       credentials: "include",
+       body: JSON.stringify(payLoad),
+     });
+     const content = await response.json();
+     //...Login is successful but will call getUser()
+     if (content?.jwt?.length > 0) {
+       await getUser();
+     } else if (content?.password_error) {
+       setError(content?.password_error);
+     } else if (content?.invalid_user_error) {
+       setError(content?.invalid_user_error);
+     }
+ } catch (error) {
+  await ApiLogout();
+ }
   };
   //...Get the logged-in user and set the profile object in LocalStorage
   const getUser = async () => {
