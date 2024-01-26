@@ -12,7 +12,7 @@ function ProfileForm(props) {
   } = useContext(Context);
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-  const [uid, setUid] = useState("");
+  const [reader_uid, setReaderUid] = useState("");
   const [department, setDeptartment] = useState("");
   const [meal_category, setMealCategory] = useState(1);
   const [disabledOne, setDisabledOne] = useState(true);
@@ -32,7 +32,7 @@ function ProfileForm(props) {
       setFirstName(userProfile?.user?.first_name);
       setLastName(userProfile?.user?.last_name);
       setDeptartment(userProfile?.department);
-      setUid(userProfile?.reader_uid);
+      setReaderUid(userProfile?.reader_uid);
       setMealCategory(userProfile?.meal_category);
     } else if (userProfile?.username) {
       setFirstName(userProfile?.first_name);
@@ -62,6 +62,7 @@ function ProfileForm(props) {
       last_name,
       department,
       meal_category,
+      reader_uid,
     };
     try {
       const REQUEST_METHOD = userProfile?.user ? "PATCH" : "POST";
@@ -125,10 +126,10 @@ function ProfileForm(props) {
           <Form.Label>UID</Form.Label>
           <Form.Control
             type="text"
-            value={uid}
+            value={reader_uid}
             placeholder="UID"
             disabled={disabledOne || disabledAll}
-            onChange={(e) => setUid(e.target.value)}
+            onChange={(e) => setReaderUid(e.target.value)}
           />
         </Form.Group>
 

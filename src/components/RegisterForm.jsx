@@ -10,7 +10,7 @@ function RegisterForm(props) {
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  const REGISTER_URL = ApiRoute.REGISTER_PATH;
+  const REGISTER_URL = ApiRoute.REGISTER_URL;
 
   const submit = async (e) => {
     e.preventDefault();

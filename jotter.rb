@@ -12,3 +12,4 @@
     ::convert the Access panel on Profile page to Report panel with \
         dropdown buttons to select report types and also include filter,sort and search options
     ::Form validations
+    ::disable department field too
